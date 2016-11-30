@@ -33,23 +33,39 @@ def computeDistanceMatrix(data):
     return distancemetric
 
     
-       
+def computeLowerBound(distancematrix): 
+    rowmin = distancematrix.min(axis=1)
+    temprowsum = rowmin.sum()
+    distancematrix -= np.array([rowmin]).T
+    colmin = distancematrix.min(axis = 0)
+    tempcolsum = colmin.sum()
+    distancematrix -= colmin
+    return tempcolsum+temprowsum
+    
+    
 def TSPBnB(distancematrix):
     visitedNodes = 0 # to keep track of how many nodes we 'visit'
     optimalTour = None # Until we discover the first tour
     priorityQueue = []
     currentNode = [0]
-    heappush(priorityQueue, currentNode)
-    
-
+    heappush(priorityQueue, currentNode)    
     return 1
 
-     
+     #%%
 startTime = time.time()
-data = []
 data=readData('./DATA-2/Roanoke.tsp')
+ndata = data.shape[0]
 distancematrix = computeDistanceMatrix(data)
 
-print data
+initLB = computeLowerBound(distancematrix)
 
 
+
+
+
+#%%
+A = range(9)
+A = np.reshape(A,(3,3))
+Acolmin = A.min(axis = 1)
+Amin = A - np.array([Acolmin]).T
+Amin
