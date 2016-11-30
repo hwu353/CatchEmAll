@@ -88,7 +88,7 @@ def main():
     startTime = time.time()
     data = []
     plot = []
-    readData('./DATA-2/Roanoke.tsp',data)
+    readData('./DATA-2/UKansasState.tsp',data)
 
     # min = []
     # for i in range(30):
