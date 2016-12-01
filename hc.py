@@ -83,15 +83,27 @@ def doNeigbhour(sol, data, move):
             break
     return move
 
+def output(sol,dist,graph,cutoff,data):
+    solfile = open(graph+'_HC_'+str(cutoff)+'.sol','w')
+    solfile.write("%d" %dist)
+    solfile.write('\n')
+    count = 0
+    while count < len(sol)- 1:
+        solfile.write("%d, %d, %d" %(sol[count], sol[count+1], calTwoPoint(data, sol[count], sol[count+1])))
+        solfile.write('\n')
+        count += 1
+    solfile.write("%d, %d, %d" %(sol[count], sol[0], calTwoPoint(data, sol[count], sol[0])))
+
+
+
 
 def main():
     startTime = time.time()
     data = []
     plot = []
-    readData('./DATA-2/UKansasState.tsp',data)
+    readData('./DATA-2/Roanoke.tsp',data)
 
-    # min = []
-    # for i in range(30):
+
     iniSol = initsol(len(data))
     randSol(iniSol)
     move = True
@@ -99,9 +111,10 @@ def main():
         move = False
         move = doNeigbhour(iniSol, data, move)
         plot.append(calTotalDis(iniSol, data))
-    #     min.append(calTotalDis(iniSol, data))
-    # min.sort()
+
     total_time = (time.time() - startTime) * 1000
+    print iniSol
+    output(iniSol,plot[-1],"Roanoke","cutofftime",data)
     print total_time
     print plot[-1]
     plt.plot(plot)
