@@ -83,8 +83,8 @@ def doNeigbhour(sol, data, move):
             break
     return move
 
-def output(sol,dist,graph,cutoff,data):
-    solfile = open(graph+'_HC_'+str(cutoff)+'.sol','w')
+def output(sol,dist,filename,cutoff,data):
+    solfile = open(filename+'_HC_'+str(cutoff)+'_sol_','w')
     solfile.write("%d" %dist)
     solfile.write('\n')
     count = 0
@@ -93,7 +93,13 @@ def output(sol,dist,graph,cutoff,data):
         solfile.write('\n')
         count += 1
     solfile.write("%d, %d, %d" %(sol[count], sol[0], calTwoPoint(data, sol[count], sol[0])))
+    solfile.close()
 
+def output_trace(time,filename,cutoff,opt,dist):
+    tracefile = open(filename+'_HC_'+str(cutoff)+'_trace_','w')
+    quality = int(((dist)/float(opt))*100)
+    tracefile.write("%d, %d" %(time, quality))
+    tracefile.close()
 
 
 
@@ -115,6 +121,7 @@ def main():
     total_time = (time.time() - startTime) * 1000
     print iniSol
     output(iniSol,plot[-1],"Roanoke","cutofftime",data)
+    output_trace(total_time/1000,"Roanoke","cutofftime",655454,plot[-1])
     print total_time
     print plot[-1]
     plt.plot(plot)
