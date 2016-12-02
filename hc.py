@@ -108,20 +108,28 @@ def main():
     data = []
     plot = []
     readData('./DATA-2/Roanoke.tsp',data)
-
-
+    filename = "Roanoke"
+    opt = 655454
+    cutofftime = 0
+    tracefile = open(filename+'_HC_'+str(cutofftime)+'_trace_','w')
     iniSol = initsol(len(data))
     randSol(iniSol)
     move = True
     while move == True:
         move = False
+        st = time.time()
         move = doNeigbhour(iniSol, data, move)
-        plot.append(calTotalDis(iniSol, data))
+        dist = calTotalDis(iniSol, data)
+        quality = int(((dist - opt)/float(opt))*100)
+        tracefile.write("%f, %d\n" %(time.time()-st, quality))
+
+        plot.append(dist)
 
     total_time = (time.time() - startTime) * 1000
     print iniSol
-    output(iniSol,plot[-1],"Roanoke","cutofftime",data)
-    output_trace(total_time/1000,"Roanoke","cutofftime",655454,plot[-1])
+    tracefile.close()
+    output(iniSol,plot[-1],filename,cutofftime,data)
+    #output_trace(total_time/1000,"Roanoke","cutofftime",655454,plot[-1])
     print total_time
     print plot[-1]
     plt.plot(plot)
