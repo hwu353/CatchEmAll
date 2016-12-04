@@ -2,7 +2,6 @@ import math
 import numpy as np
 import time
 import sys
-#from scipy.spatial import distance
 from heapq import *
 from hc import *
 from MST1 import *
@@ -26,13 +25,6 @@ def readData(tspfile):
             count += 1
     return np.array(data)
 
-def computeDistanceMatrix1(data):
-    inf = float("inf")
-    distancemetric = distance.squareform(distance.pdist(data))
-    nnode = data.shape[0]
-    distancemetric += np.diag(np.ones(nnode) * inf)
-    return distancemetric
-
 def computeDistanceMatrix(data):
     inf = float("inf")
     nnode = data.shape[0]
@@ -51,11 +43,6 @@ def computeDistanceMatrix(data):
 
 
 
-def getHead(n):
-    list = []
-    for i in range(0, n):
-        list.append(i)
-    return list
 
 
 def getLowerBoundbyReduction(distancematrix,tempList1): 
@@ -138,7 +125,7 @@ def bfs(heap, edges, distancematrix,cuttime):
                 lb = calPartLen(tempList1, distancematrix) + MST + \
                      findLbAB(tempList1[0], tempList2, distancematrix) + findLbAB(tempList1[-1], tempList2, distancematrix)
                 if lb < best:
-                    heappush(heap, (len(tempList2), tempList1, tempList2))
+                    heappush(heap, (lb, tempList1, tempList2))
                     
 
 
@@ -170,19 +157,17 @@ def TSP(filename,isInitialize,isDFS,cuttime):
         dfs([0],range(1,n), edges, distancematrix,cuttime)
     else:
         heap = []
-        head = (0,[], getHead(n))
+        head = (0,[], range(n))
         heappush(heap, head)
         bfs(heap, edges, distancematrix,cuttime)
         
-
-
 
 
 if __name__ == '__main__':
     # run the experiments
     isInitialize = 0
     isDFS=1
-    cuttime = 3600
+    cuttime = 600
     ifile = int(sys.argv[1])
 
     allfilename = glob.glob('./DATA-2/*.tsp')
@@ -191,4 +176,5 @@ if __name__ == '__main__':
     cityname = filename[9:-4]
     print cityname
     TSP(filename,isInitialize,isDFS,cuttime)
-    print best,bestpath,cityname
+    total_time = (time.time() - start_time)
+    print best,bestpath,cityname,total_time
